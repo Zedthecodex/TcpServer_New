@@ -11,13 +11,29 @@ namespace TcpServer
     {
         static void Main(string[] args)
         {
-            int port = 9000;
 
-            SimpleServer _simpleServer = new SimpleServer("192.168.1.132", port);
+            if (args.Length == 0)
+            {
+                int port = 9000;
 
-            _simpleServer.Start();
+                SimpleServer _simpleServer = new SimpleServer("192.168.1.3", port);
 
-            _simpleServer.Stop();
+                _simpleServer.Start();
+
+                _simpleServer.Stop();
+            }
+
+            else
+            {
+                int port = Int32.Parse(args[0].ToString());
+
+                SimpleServer _simpleServer = new SimpleServer("192.168.1.3", port);
+
+                _simpleServer.Start();
+
+                _simpleServer.Stop();
+            }
+           
             
            
         }

@@ -13,13 +13,14 @@ namespace TCPServerController
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-     
-        static void Main()
+
+        [STAThread]
+        static void Main(string[] args)
         {
 
             int port = 9001;
             
-            SimpleServer _simpleServer = new SimpleServer("192.168.1.132", port);
+            SimpleServer _simpleServer = new SimpleServer("192.168.1.3", port);
 
             _simpleServer.Start();
 

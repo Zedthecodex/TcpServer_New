@@ -8,6 +8,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
 using Shared_Class;
+using System.Net.NetworkInformation;
+using System.Diagnostics;
 
 namespace TcpServer
 {
@@ -24,8 +26,24 @@ namespace TcpServer
             _tcpListener = new TcpListener(ip, port);
         }
 
+        public static bool ScanNetwork(int port)
+        {
+            IPGlobalProperties iPGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
+            TcpConnectionInformation[] tcpConnInfoArray = iPGlobalProperties.GetActiveTcpConnections();
+
+            foreach (TcpConnectionInformation tcpi in tcpConnInfoArray )
+            {
+                if(tcpi.RemoteEndPoint.Port == port)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public void Start()
         {
+           
             _tcpListener.Start();
             Console.WriteLine("Ther server is listening on port : " + Convert.ToString(pport));
 
@@ -69,6 +87,8 @@ namespace TcpServer
 
                     Packet packet = formatter.Deserialize(memoryStream) as Packet;
 
+                   
+
                     switch (packet.type)
                     {
                         case PacketType.NICKNAME:
@@ -80,9 +100,26 @@ namespace TcpServer
 
                         case PacketType.CHATMESSAGE:
                             string message = ((ChatMessagePacket)packet).message;
+                            bool isAvailable = ScanNetwork(9500);
 
-                            Console.WriteLine("[" + fromClient.NickName + "]" + message);
+                            if (message == "room_test") 
+                            {
+                                if (isAvailable == true)
+                                {
+                                    Console.WriteLine("Accessing New Chat_Room");
 
+                                    Process process = new Process();
+                                    process.StartInfo.FileName = "TcpServer.exe";
+                                    process.StartInfo.Arguments = "9500";
+                                    process.Start();
+                                }else
+                                {
+                                    break;
+                                }
+                            }
+                            else
+                            { Console.WriteLine("[" + fromClient.NickName + "]" + message); }
+                                
                             foreach(Client c in clients)
                             {
                                 c.SendText(fromClient, message);

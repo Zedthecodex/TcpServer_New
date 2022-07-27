@@ -23,8 +23,8 @@ namespace TcpServer_Client
             InitializeComponent();
             
 
-            room_og = new room("room_og", "192.168.1.132", 9000);
-            room_test = new room("room_test", "192.168.1.132", 9500);
+            room_og = new room("room_og", "192.168.1.3", 9000);
+            room_test = new room("room_test", "192.168.1.3", 9500);
             room_test1 = new room("room_test1", "192.168.1.132", 9750);
 
             selectedRoom = room_og;
@@ -59,7 +59,7 @@ namespace TcpServer_Client
 
             //Message_Textbox.Text = listBox1.SelectedItem.ToString();
 
-            selectedRoom.ConnectionRoom.SendText(listBox1.SelectedItem.ToString());
+           // selectedRoom.ConnectionRoom.SendText(listBox1.SelectedItem.ToString());
             //connectToRoom(selectedRoom, true);
         }
 
@@ -145,6 +145,11 @@ namespace TcpServer_Client
 
             if (!selectedRoom.Connected) Connect_Button.Text = "Connect";
             else Connect_Button.Text = "Disconnect";
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            room_og.ConnectionRoom.Disconnect();
         }
     }
 }

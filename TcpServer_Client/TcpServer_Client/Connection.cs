@@ -36,11 +36,16 @@ namespace TcpServer_Client
                 _thread = new Thread(new ThreadStart(ProcessServerResponse));
                 _thread.Start();
             }
-            catch(Exception e)
+            catch (TimeoutException Timeout)
+            {
+
+            }
+            catch (Exception e)
             {
                 OutputText("Exception: " + e.Message);
                 return false;
             }
+            
 
             return true;
         }
