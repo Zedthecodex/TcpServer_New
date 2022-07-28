@@ -16,7 +16,7 @@ namespace TcpServer
             {
                 int port = 9000;
 
-                SimpleServer _simpleServer = new SimpleServer("192.168.1.3", port);
+                SimpleServer _simpleServer = new SimpleServer("192.168.1.132", port);
 
                 _simpleServer.Start();
 
@@ -25,9 +25,13 @@ namespace TcpServer
 
             else
             {
+
+
                 int port = Int32.Parse(args[0].ToString());
 
-                SimpleServer _simpleServer = new SimpleServer("192.168.1.3", port);
+                Console.Title = args[0].ToString();
+
+                SimpleServer _simpleServer = new SimpleServer("192.168.1.132", port);
 
                 _simpleServer.Start();
 

@@ -23,8 +23,8 @@ namespace TcpServer_Client
             InitializeComponent();
             
 
-            room_og = new room("room_og", "192.168.1.3", 9000);
-            room_test = new room("room_test", "192.168.1.3", 9500);
+            room_og = new room("room_og", "192.168.1.132", 9000);
+            room_test = new room("room_test", "192.168.1.132", 9500);
             room_test1 = new room("room_test1", "192.168.1.132", 9750);
 
             selectedRoom = room_og;

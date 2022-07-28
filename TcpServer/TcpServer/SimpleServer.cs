@@ -10,6 +10,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Shared_Class;
 using System.Net.NetworkInformation;
 using System.Diagnostics;
+using System.Management;
 
 namespace TcpServer
 {
@@ -86,8 +87,8 @@ namespace TcpServer
                     MemoryStream memoryStream = new MemoryStream(bytes);
 
                     Packet packet = formatter.Deserialize(memoryStream) as Packet;
+                    int tempServer = 0;
 
-                   
 
                     switch (packet.type)
                     {
@@ -102,6 +103,29 @@ namespace TcpServer
                             string message = ((ChatMessagePacket)packet).message;
                             bool isAvailable = ScanNetwork(9500);
 
+
+                            if (message == "room_test1")
+                            {
+                                if (isAvailable == false)
+                                {
+                                    Console.WriteLine("Accessing Chat 9750");
+                                    if (tempServer != 0)
+                                    {
+                                        Process tempProc = Process.GetProcessById(tempServer);
+                                        Console.WriteLine(tempServer);
+                                        tempProc.Kill();
+                                        tempProc.WaitForExit();
+                                        tempProc.Dispose();
+                                        
+                                    }
+                                    Process process = new Process();
+
+                                    process.StartInfo.FileName = "TcpServer.exe";
+                                    process.StartInfo.Arguments = "9750";
+                                    process.Start();
+                                }
+                            }
+
                             if (message == "room_test") 
                             {
                                 if (isAvailable == true)
@@ -109,9 +133,23 @@ namespace TcpServer
                                     Console.WriteLine("Accessing New Chat_Room");
 
                                     Process process = new Process();
+
+
                                     process.StartInfo.FileName = "TcpServer.exe";
                                     process.StartInfo.Arguments = "9500";
                                     process.Start();
+
+                                    tempServer =  System.Convert.ToInt32(process.Id.ToString());
+
+                                    //Task.Delay(5000);
+
+                                   // IDprocess = System.Convert.ToInt32(process.Id.ToString());
+                                   //// Console.WriteLine(IDprocess);
+                                   // Process tempProc = Process.GetProcessById(IDprocess);
+                                   // tempProc.Kill();
+                                   // tempProc.Close();
+                                   // tempProc.WaitForExit();
+
                                 }else
                                 {
                                     break;
@@ -119,11 +157,15 @@ namespace TcpServer
                             }
                             else
                             { Console.WriteLine("[" + fromClient.NickName + "]" + message); }
-                                
-                            foreach(Client c in clients)
+
+                            
+
+
+                            foreach (Client c in clients)
                             {
                                 c.SendText(fromClient, message);
                             }
+                           
 
                             break;
                     }
